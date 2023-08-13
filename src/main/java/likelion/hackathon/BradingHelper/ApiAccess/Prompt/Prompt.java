@@ -1,12 +1,13 @@
 package likelion.hackathon.BradingHelper.ApiAccess.Prompt;
 
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-@Getter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class Prompt {
@@ -16,7 +17,7 @@ public class Prompt {
     private Option option;
     private String description;
 
-    @Getter
+    @Data
     @AllArgsConstructor
     @NoArgsConstructor
     public static class Category {
@@ -24,7 +25,7 @@ public class Prompt {
         private String childCategory;
     }
 
-    @Getter
+    @Data
     @AllArgsConstructor
     @NoArgsConstructor
     public static class Option {

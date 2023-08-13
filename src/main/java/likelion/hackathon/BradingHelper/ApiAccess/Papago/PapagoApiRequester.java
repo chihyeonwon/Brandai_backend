@@ -1,4 +1,4 @@
-package likelion.hackathon.BradingHelper.ApiAccess.Translation;
+package likelion.hackathon.BradingHelper.ApiAccess.Papago;
 
 import likelion.hackathon.BradingHelper.ApiAccess.Interfaces.ApiRequesterInterface;
 import likelion.hackathon.BradingHelper.ApiAccess.Security.TokenManager;
@@ -54,7 +54,7 @@ public class PapagoApiRequester implements ApiRequesterInterface {
                 dataOutputStream.flush();
 
                 result = httpUtils.getHttpResponse(conn);
-
+                System.out.println(result);
             } catch (IOException e) {
                 e.printStackTrace();
             }

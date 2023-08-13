@@ -1,4 +1,4 @@
-package likelion.hackathon.BradingHelper.ApiAccess.Translation;
+package likelion.hackathon.BradingHelper.ApiAccess.Papago;
 
 import likelion.hackathon.BradingHelper.ApiAccess.Interfaces.DataPreprocessorInterface;
 import lombok.RequiredArgsConstructor;

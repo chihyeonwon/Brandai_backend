@@ -1,6 +1,6 @@
 package likelion.hackathon.BradingHelper.ApiAccess.Controller;
 
-import likelion.hackathon.BradingHelper.ApiAccess.Translation.PapagoTranslator;
+import likelion.hackathon.BradingHelper.ApiAccess.Papago.PapagoTranslator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
