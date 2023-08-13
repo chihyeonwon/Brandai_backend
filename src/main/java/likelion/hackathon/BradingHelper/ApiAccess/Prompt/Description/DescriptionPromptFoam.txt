@@ -12,12 +12,31 @@ LogoToStringPrompt.java
 
 < String Foam >
 
-Prompt for Generating Brand Logo Image
-Mood: [여기에 mood 값이 들어갈 것입니다].
-Base Color: [여기에 baseColor 값이 들어갈 것입니다].
-Logo Object: [여기에 object 값이 들어갈 것입니다].
+
+Prompt for Generating an article on the sale of goods.
+brandName: [여기에 brandName 값이 들어갈 것입니다].
 Keywords: [여기에 keyword 값이 들어갈 것입니다].
 
 The brand is focused on [parentCategory 값이 들어갈 것입니다] within an e-commerce platform run by small businesses.
 It specializes in [childCategory 값이 들어갈 것입니다].
-Please create a brand logo image.
+Simple description: [Description 값이 들어갈 것입니다].
+Please create an article on the sale of goods.
+
+Please make it into a form like below.
+
+Product Name (Thick)
+
+Simple product introduction
+
+Product Features1
+Feature Description
+
+Product Features 2
+Feature Description
+
+Product Features 3
+Feature Description
+
+promotion of the product.
+
+Please write in Korean.

@@ -1,7 +1,7 @@
 package likelion.hackathon.BradingHelper.DataCollection.Controller;
 
-import likelion.hackathon.BradingHelper.DataCollection.Dto.DataCollectionDto;
-import likelion.hackathon.BradingHelper.DataCollection.Service.DataCollectionService;
+import likelion.hackathon.BradingHelper.DataCollection.Dto.UserAccountDto;
+import likelion.hackathon.BradingHelper.DataCollection.Service.UserAccountService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,14 +15,15 @@ import java.util.Map;
 @RestController
 @RequestMapping("/data")
 @RequiredArgsConstructor
-public class DataCollectionController {
-    private final DataCollectionService dataCollectionService;
+public class UserAccountController {
+    private final UserAccountService userAccountService;
 
     @PostMapping
-    public ResponseEntity<Map<String, Long>> createData(@RequestBody DataCollectionDto dataCollectionDto) {
-        Long row = dataCollectionService.createData(dataCollectionDto);
+    public ResponseEntity<Map<String, Long>> createUser(@RequestBody UserAccountDto userAccountDto) {
+//        Long row = userAccountService.createData(userAccountDto);
         Map<String, Long> response = new HashMap<>();
-        response.put("Id", row);
+//        response.put("Id", row);
+        response.put("Id", 5L);
         return ResponseEntity.ok().body(response);
     }
 }

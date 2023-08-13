@@ -22,11 +22,11 @@ public class DescriptionPromptPreprocessor implements PromptPreprocessor {
         // Classify Prompt
         Map<String, String> classifyPrompt = new HashMap<>();
 
-        classifyPrompt.put("mood", enPrompt.getOption().getMood());
-        classifyPrompt.put("baseColor", enPrompt.getOption().getBaseColor());
-        classifyPrompt.put("object", enPrompt.getOption().getObject());
+        classifyPrompt.put("brandName", enPrompt.getBrandName());
+        classifyPrompt.put("keyword", enPrompt.getHashtag().toString());
         classifyPrompt.put("parentCategory", enPrompt.getCategory().getParentCategory());
         classifyPrompt.put("childCategory", enPrompt.getCategory().getChildCategory());
+        classifyPrompt.put("description", enPrompt.getDescription());
 
         return classifyPrompt;
     }

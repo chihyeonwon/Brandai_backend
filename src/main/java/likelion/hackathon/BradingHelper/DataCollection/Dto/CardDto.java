@@ -7,7 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class DataCollectionDto {
-    private Boolean agreement;
-    private int ageRange;
+public class CardDto {
+    private Long id;
+    private Long userAccountId;
+    private CardDetailDto cardDetail;
 }
