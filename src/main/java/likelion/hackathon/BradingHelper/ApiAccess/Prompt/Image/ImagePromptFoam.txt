@@ -1,0 +1,23 @@
+PromptPreprocessor.java
+
+< Classify Element >
+
+mood, baseColor, object, keyword, parentCategory, childCategory
+
+
+================================================================
+
+
+LogoToStringPrompt.java
+
+< String Foam >
+
+Prompt for Generating Brand Background Image
+Mood: [여기에 mood 값이 들어갈 것입니다].
+Base Color: [여기에 baseColor 값이 들어갈 것입니다].
+Logo Object: [여기에 object 값이 들어갈 것입니다].
+Keywords: [여기에 keyword 값이 들어갈 것입니다].
+
+The brand is focused on [parentCategory 값이 들어갈 것입니다] within an e-commerce platform run by small businesses.
+It specializes in [childCategory 값이 들어갈 것입니다].
+Please create a brand background image.
