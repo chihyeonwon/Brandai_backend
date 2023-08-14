@@ -1,64 +1,39 @@
 package likelion.hackathon.BradingHelper.DataCollection.Service;
 
+import likelion.hackathon.BradingHelper.DataCollection.Dao.UserAccountDao;
 import likelion.hackathon.BradingHelper.DataCollection.Dto.UserAccountDto;
-import likelion.hackathon.BradingHelper.DataCollection.Entity.UserAccount;
-import likelion.hackathon.BradingHelper.DataCollection.Repository.UserAccountRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class UserAccountService {
-    private final UserAccountRepository userAccountRepository;
+    private final UserAccountDao userAccountDao;
 
     @Transactional
-    public Long createData(UserAccountDto userAccountDto) {
-        UserAccount userAccount = UserAccount.builder()
-                .name(userAccountDto.getName())
-                .phoneNumber(userAccountDto.getPhoneNumber())
-                .build();
-
-        userAccountRepository.save(userAccount);
-
-        return userAccount.getId();
+    public Long createAccount(UserAccountDto userAccountDto) {
+        return userAccountDao.create(userAccountDto);
     }
 
-    @Transactional(readOnly = true)
-    public UserAccountDto getUserAccountById(Long userId) {
-        Optional<UserAccount> userAccountOptional = userAccountRepository.findById(userId);
+    public UserAccountDto readAccount(Long cardId) {
+        return userAccountDao.read(cardId);
+    }
 
-        if (userAccountOptional.isPresent()) {
-            UserAccount userAccount = userAccountOptional.get();
-
-            UserAccountDto userAccountDto = new UserAccountDto();
-
-            userAccountDto.setId(userAccount.getId());
-            userAccountDto.setName(userAccount.getName());
-            userAccountDto.setPhoneNumber(userAccount.getPhoneNumber());
-            return userAccountDto;
-        }
-        return null;
+    public List<UserAccountDto> readAccountAll() {
+        return userAccountDao.readAll();
     }
 
     @Transactional
-    public void updateUserData(Long userId, UserAccountDto userAccountDto) {
-        Optional<UserAccount> userAccountOptional = userAccountRepository.findById(userId);
-
-        if (userAccountOptional.isPresent()) {
-            UserAccount userAccount = UserAccount.builder()
-                    .id(userAccountDto.getId())
-                    .name(userAccountDto.getName())
-                    .phoneNumber(userAccountDto.getPhoneNumber())
-                    .build();
-            userAccountRepository.save(userAccount);
-        }
+    public Long updateAccount(Long cardId, UserAccountDto userAccountDto) {
+        return userAccountDao.update(cardId, userAccountDto);
     }
 
     @Transactional
-    public void deleteData(Long userId) {
-        userAccountRepository.deleteById(userId);
+    public void deleteAccount(Long cardId) {
+        userAccountDao.delete(cardId);
     }
 }

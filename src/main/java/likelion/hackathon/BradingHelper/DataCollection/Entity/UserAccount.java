@@ -1,15 +1,15 @@
 package likelion.hackathon.BradingHelper.DataCollection.Entity;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import likelion.hackathon.BradingHelper.DataCollection.Dto.CardDto;
+import likelion.hackathon.BradingHelper.DataCollection.Dto.UserAccountDto;
+import lombok.*;
 
 import javax.persistence.*;
+import java.util.Iterator;
 import java.util.List;
 
 @Entity
-@Getter
+@Getter @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "userAccounts")
 public class UserAccount {
@@ -33,5 +33,15 @@ public class UserAccount {
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.cardList = cardList;
+    }
+
+    public void updateFromDto(UserAccountDto userAccountDto) {
+        if (userAccountDto.getName() != null) {
+            this.name = userAccountDto.getName();
+        } if (userAccountDto.getPhoneNumber() != null) {
+            this.phoneNumber = userAccountDto.getPhoneNumber();
+        } if (userAccountDto.getCardList() != null) {
+            Iterator<CardDto> cardDtoIterator = userAccountDto.getCardList().iterator();
+        }
     }
 }

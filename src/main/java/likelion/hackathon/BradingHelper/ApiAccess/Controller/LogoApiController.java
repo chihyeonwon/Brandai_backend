@@ -1,5 +1,7 @@
 package likelion.hackathon.BradingHelper.ApiAccess.Controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import likelion.hackathon.BradingHelper.ApiAccess.Logo.LogoGenerator;
 import likelion.hackathon.BradingHelper.ApiAccess.Prompt.Logo.LogoToStringPrompt;
 import likelion.hackathon.BradingHelper.ApiAccess.Prompt.Prompt;
@@ -12,10 +14,12 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
+@Tag(name = "로고 생성 API")
 public class LogoApiController {
     private final LogoGenerator logoGenerator;
     private final LogoToStringPrompt logoToStringPrompt;
 
+    @Operation(summary = "로고 생성", description = "프롬프트에서 키워드를 추출해 적절한 로고를 생성합니다.")
     @PostMapping("/logo")
     public Map<String, Object> LogoRestApi(@RequestBody Prompt prompt) {
         String stringPrompt = logoToStringPrompt.getStringPrompt(prompt);
