@@ -31,6 +31,5 @@ public class Prompt {
     public static class Option {
         private String mood;
         private String baseColor;
-        private String object;
     }
 }

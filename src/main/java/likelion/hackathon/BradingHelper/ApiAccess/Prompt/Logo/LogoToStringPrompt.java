@@ -21,7 +21,6 @@ public class LogoToStringPrompt implements ToStringPrompt {
         System.out.println("Prompt for Generating Brand Logo Image\n"
                 + "Mood: " + classifyPrompt.get("mood") + "\n"
                 + "Base Color: " + classifyPrompt.get("baseColor") + "\n"
-                + "Logo Object: " + classifyPrompt.get("object") + "\n"
                 + "Keywords: " + classifyPrompt.get("keyword") + "\n\n"
                 + "The brand is focused on " + classifyPrompt.get("parentCategory") + " within an e-commerce platform run by small businesses. \n" +
                 "It specializes in " + classifyPrompt.get("childCategory") + ".\n" +

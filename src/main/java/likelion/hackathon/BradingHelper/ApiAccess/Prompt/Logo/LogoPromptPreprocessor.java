@@ -27,8 +27,6 @@ public class LogoPromptPreprocessor implements PromptPreprocessor {
                 ? enPrompt.getOption().getMood() : "");
         classifyPrompt.put("baseColor", enPrompt.getOption() != null && enPrompt.getOption().getBaseColor() != null
                 ? enPrompt.getOption().getBaseColor() : "");
-        classifyPrompt.put("object", enPrompt.getOption() != null && enPrompt.getOption().getObject() != null
-                ? enPrompt.getOption().getObject() : "");
         classifyPrompt.put("keyword", enPrompt.getHashtag() != null
                 ? enPrompt.getHashtag().toString() : "");
         classifyPrompt.put("parentCategory", enPrompt.getCategory() != null && enPrompt.getCategory().getParentCategory() != null
