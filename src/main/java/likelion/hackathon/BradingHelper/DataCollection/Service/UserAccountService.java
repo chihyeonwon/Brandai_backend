@@ -36,4 +36,9 @@ public class UserAccountService {
     public void deleteAccount(Long cardId) {
         userAccountDao.delete(cardId);
     }
+
+    @Transactional(readOnly = true)
+    public UserAccountDto readAccountByName(String name) {
+        return userAccountDao.readByName(name);
+    }
 }

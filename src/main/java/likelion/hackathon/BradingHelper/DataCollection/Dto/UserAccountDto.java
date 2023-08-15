@@ -13,14 +13,14 @@ import java.util.List;
 public class UserAccountDto {
     private Long id;
     private String name;
-    private String phoneNumber;
+    private String email;
     private List<CardDto> cardList;
 
     @Builder
-    public UserAccountDto(Long id, String name, String phoneNumber, List<CardDto> cardList) {
+    public UserAccountDto(Long id, String name, String email, List<CardDto> cardList) {
         this.id = id;
         this.name = name;
-        this.phoneNumber = phoneNumber;
+        this.email = email;
         this.cardList = cardList;
     }
 
@@ -36,7 +36,7 @@ public class UserAccountDto {
         return UserAccountDto.builder()
                 .id(userAccount.getId())
                 .name(userAccount.getName())
-                .phoneNumber(userAccount.getPhoneNumber())
+                .email(userAccount.getEmail())
                 .cardList(cardDtoList).build();
     }
 }

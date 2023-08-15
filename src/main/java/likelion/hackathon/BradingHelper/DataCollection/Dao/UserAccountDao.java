@@ -20,7 +20,7 @@ public class UserAccountDao {
 
         UserAccount userAccount = UserAccount.builder()
                 .name(userAccountDto.getName())
-                .phoneNumber(userAccountDto.getPhoneNumber())
+                .email(userAccountDto.getEmail())
                 .cardList(new ArrayList<>())
                 .build();
         userAccountRepository.save(userAccount);
@@ -62,7 +62,7 @@ public class UserAccountDao {
         }
 
         UserAccount userAccount = userAccountOptional.get();
-        userAccount.updateFromDto(userAccountDto); // name과 phone number만 수정가능
+        userAccount.updateFromDto(userAccountDto); // name과 Email number만 수정가능
 
         userAccountRepository.save(userAccount);
 
@@ -71,5 +71,17 @@ public class UserAccountDao {
 
     public void delete(Long userId) {
         userAccountRepository.deleteById(userId);
+    }
+
+    public UserAccountDto readByName(String name) {
+        Optional<UserAccount> targetAccountOptional = userAccountRepository.findByName(name);
+
+        if (targetAccountOptional.isEmpty()) {
+            return null;
+        }
+
+        UserAccount targetAccount = targetAccountOptional.get(); // target Account
+
+        return UserAccountDto.of(targetAccount); // UserAccount -> UserAccountDto
     }
 }

@@ -15,7 +15,7 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/account")
+@RequestMapping("/dai/db/account")
 @Tag(name = "회원 기능 Api")
 public class UserAccountController {
     private final UserAccountService userAccountService;
@@ -27,15 +27,15 @@ public class UserAccountController {
         Long row = userAccountService.createAccount(userAccountDto);
 
         Map<String, Long> response = new HashMap<>();
-        response.put("Id", row);
+        response.put("userId", row);
 
         return ResponseEntity.ok().body(response);
     }
 
     // Read
     @Operation(summary = "계정 정보 가져오기", description = "계정 정보를 가져옵니다.")
-    @GetMapping("{id}")
-    public ResponseEntity<UserAccountDto> readAccount(@PathVariable Long id) {
+    @GetMapping("{userId}")
+    public ResponseEntity<UserAccountDto> readAccount(@PathVariable("userId") Long id) {
         UserAccountDto userAccountDto = userAccountService.readAccount(id);
 
         if (userAccountDto == null){
@@ -55,20 +55,20 @@ public class UserAccountController {
 
     // Update
     @Operation(summary = "계정 업데이트", description = "계정 정보를 업데이트 합니다.")
-    @PutMapping("{id}")
+    @PutMapping("{userId}")
     public ResponseEntity<Map<String, Long>> updateAccount(
-            @PathVariable("id") Long id,
+            @PathVariable("userId") Long id,
             @RequestBody UserAccountDto userAccountDto
     ){
         Map<String, Long> response = new HashMap<>();
-        response.put("boardId", userAccountService.updateAccount(id, userAccountDto));
+        response.put("userId", userAccountService.updateAccount(id, userAccountDto));
         return ResponseEntity.ok().body(response);
     }
 
     // Delete
     @Operation(summary = "계정 삭제", description = "계정을 삭제합니다.")
-    @DeleteMapping("{id}")
-    public ResponseEntity<HttpStatus> deleteAccount(@PathVariable("id") Long id) {
+    @DeleteMapping("{userId}")
+    public ResponseEntity<HttpStatus> deleteAccount(@PathVariable("userId") Long id) {
         userAccountService.deleteAccount(id);
         return ResponseEntity.ok().body(HttpStatus.OK);
     }

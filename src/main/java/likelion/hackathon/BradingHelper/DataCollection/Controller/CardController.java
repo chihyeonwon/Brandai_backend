@@ -3,29 +3,32 @@ package likelion.hackathon.BradingHelper.DataCollection.Controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import likelion.hackathon.BradingHelper.DataCollection.Dto.CardDto;
+import likelion.hackathon.BradingHelper.DataCollection.Entity.Card;
 import likelion.hackathon.BradingHelper.DataCollection.Service.CardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/card")
+@RequestMapping("/dai/db/card")
 @Tag(name = "카드 관련 API")
 public class CardController {
     private final CardService cardService;
-
 
     // Create
     @Operation(summary = "카드 생성", description = "카드를 생성합니다.")
     @PostMapping
     public ResponseEntity<Map<String, Long>> createCard(@RequestBody CardDto cardDto) {
-        Long row = cardService.createCard(cardDto);
+        CardDto cardDto1 = CardDto.toPath(cardDto, cardService.generateUniqueImagePath());
+
+        Long row = cardService.createCard(cardDto1);
 
         Map<String, Long> response = new HashMap<>();
         response.put("Id", row);
@@ -36,38 +39,46 @@ public class CardController {
 
     // Read
     @Operation(summary = "카드 정보 가져오기", description = "카드 id를 이용해 카드를 가져옵니다.")
-    @GetMapping("{id}")
-    public ResponseEntity<CardDto> readCard(@PathVariable Long id) {
+    @GetMapping("/{cardId}")
+    public ResponseEntity<CardDto> readCard(@PathVariable("cardId") Long id) {
         CardDto cardDto = cardService.readCard(id);
 
         if (cardDto == null){
             return ResponseEntity.unprocessableEntity().body(null);
         }
 
-        return ResponseEntity.ok(cardDto);
+        CardDto cardDto1 = CardDto.toBase64(cardDto);
+
+        return ResponseEntity.ok(cardDto1);
     }
 
 
     // Read All Card By UserId
     @Operation(summary = "특정 유저의 카드 목록 가져오기", description = "해당 유저의 카드 목록을 가져옵니다.")
-    @GetMapping("/{userId}")
+    @GetMapping("/account/{userId}")
     public ResponseEntity<List<CardDto>> readCardAllByUserId(@PathVariable("userId") Long userId) {
         List<CardDto> cardDtoList = cardService.readCardAllByUserId(userId);
+        List<CardDto> cardDtos = new ArrayList<>();
 
-        return ResponseEntity.ok(cardDtoList);
+        for (CardDto cardDto : cardDtoList) {
+            CardDto cardDto1 = CardDto.toBase64(cardDto);
+            cardDtos.add(cardDto1);
+        }
+
+        return ResponseEntity.ok(cardDtos);
     }
 
 
     // Update
     @Operation(summary = "카드 업데이트", description = "카드를 업데이트 합니다.")
-    @PutMapping("/{userId}/{cardId}")
+    @PutMapping("/{cardId}/account/{userId}")
     public ResponseEntity<Map<String, Long>> updateCard(
             @PathVariable("userId") Long userId,
             @PathVariable("cardId") Long cardId,
             @RequestBody CardDto cardDto
     ){
         Map<String, Long> response = new HashMap<>();
-        response.put("boardId", cardService.updateCard(userId, cardId, cardDto));
+        response.put("cardId", cardService.updateCard(userId, cardId, cardDto));
 
         return ResponseEntity.ok().body(response);
     }

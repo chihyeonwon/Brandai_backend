@@ -30,13 +30,17 @@ public class Card {
     @Column(name = "logoUrl2")
     private String logoUrl2;
 
+    @Column(name = "image_path")
+    private String imagePath;
+
     @Builder
-    public Card(Long id, UserAccount userAccount, String description, String logoUrl1, String logoUrl2) {
+    public Card(Long id, UserAccount userAccount, String description, String logoUrl1, String logoUrl2, String imagePath) {
         this.id = id;
         this.userAccount = userAccount;
         this.description = description;
         this.logoUrl1 = logoUrl1;
         this.logoUrl2 = logoUrl2;
+        this.imagePath = imagePath;
     }
 
     public void updateFromDto(CardDto cardDto) {
@@ -46,6 +50,8 @@ public class Card {
             this.logoUrl1 = cardDto.getLogoUrl1();
         } if (cardDto.getLogoUrl2() != null) {
             this.logoUrl2 = cardDto.getLogoUrl2();
+        } if (cardDto.getImagePath() != null) {
+            this.imagePath = cardDto.getImagePath();
         }
     }
 }

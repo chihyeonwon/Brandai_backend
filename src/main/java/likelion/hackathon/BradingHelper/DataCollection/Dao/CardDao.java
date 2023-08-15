@@ -31,6 +31,7 @@ public class CardDao {
                 .logoUrl1(cardDto.getLogoUrl1())
                 .logoUrl2(cardDto.getLogoUrl2())
                 .description(cardDto.getDescription())
+                .imagePath(cardDto.getImagePath())
                 .userAccount(userAccount.get())
                 .build();
 
