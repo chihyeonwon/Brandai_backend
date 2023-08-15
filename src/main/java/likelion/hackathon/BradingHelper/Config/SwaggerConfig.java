@@ -17,8 +17,8 @@ public class SwaggerConfig {
 
     private Info apiInfo() {
         return new Info()
-                .title("Springdoc 테스트")
-                .description("Springdoc을 사용한 Swagger UI 테스트")
+                .title("BranDai 서비스 RestAPI Doc")
+                .description("api 호출시에는 localhost:8080/~~ 으로 URL을 바인드 해주세요.\t예시) localhost:8080/card/1/2")
                 .version("1.0.0");
     }
 }
