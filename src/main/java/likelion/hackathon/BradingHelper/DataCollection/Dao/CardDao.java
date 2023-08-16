@@ -1,7 +1,9 @@
 package likelion.hackathon.BradingHelper.DataCollection.Dao;
 
 import likelion.hackathon.BradingHelper.DataCollection.Dto.CardDto;
+import likelion.hackathon.BradingHelper.DataCollection.Dto.DescriptionDto;
 import likelion.hackathon.BradingHelper.DataCollection.Entity.Card;
+import likelion.hackathon.BradingHelper.DataCollection.Entity.Description;
 import likelion.hackathon.BradingHelper.DataCollection.Entity.UserAccount;
 import likelion.hackathon.BradingHelper.DataCollection.Repository.CardRepository;
 import likelion.hackathon.BradingHelper.DataCollection.Repository.UserAccountRepository;
@@ -26,11 +28,25 @@ public class CardDao {
             return null;
         }
 
+        DescriptionDto descriptionDto = cardDto.getDescription();
+        Description description = Description.builder()
+                .id(descriptionDto.getId())
+                .productName(descriptionDto.getProductName())
+                .introduction(descriptionDto.getIntroduction())
+                .featureFirst(descriptionDto.getFeatureFirst())
+                .featureDescription1(descriptionDto.getFeatureDescription1())
+                .featureSecond(descriptionDto.getFeatureSecond())
+                .featureDescription2(descriptionDto.getFeatureDescription2())
+                .featureThird(descriptionDto.getFeatureThird())
+                .featureDescription3(descriptionDto.getFeatureDescription3())
+                .promotion(descriptionDto.getPromotion())
+                .build();
+
         Card card = Card.builder()
-                .id(cardDto.getId())
+                .userAccount(userAccount.get())
                 .logoUrl1(cardDto.getLogoUrl1())
                 .logoUrl2(cardDto.getLogoUrl2())
-                .description(cardDto.getDescription())
+                .description(description)
                 .imagePath(cardDto.getImagePath())
                 .userAccount(userAccount.get())
                 .build();

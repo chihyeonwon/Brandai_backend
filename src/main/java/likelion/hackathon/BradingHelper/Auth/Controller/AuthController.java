@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import likelion.hackathon.BradingHelper.Auth.Service.KakaoService;
 import likelion.hackathon.BradingHelper.DataCollection.Dto.CardDto;
 import likelion.hackathon.BradingHelper.DataCollection.Dto.UserAccountDto;
+import likelion.hackathon.BradingHelper.DataCollection.Entity.Card;
 import likelion.hackathon.BradingHelper.DataCollection.Entity.UserAccount;
 import likelion.hackathon.BradingHelper.DataCollection.Service.CardService;
 import likelion.hackathon.BradingHelper.DataCollection.Service.UserAccountService;
@@ -13,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +30,7 @@ public class AuthController {
 
     @GetMapping("/searchCard")
     @Operation(summary = "카드 목록을 확인합니다.", description = "카드를 생성합니다. /dai/auth/searchCard?token=토큰")
-    public ResponseEntity<?> searchCardListByToken(
+    public ResponseEntity<List<CardDto>> searchCardListByToken(
             @RequestParam(required = true) String token
     ) {
         Map<String, String> userData = kakaoService.getKakaoUserData(token);
@@ -36,18 +38,20 @@ public class AuthController {
         String name = userData.get("name");
         UserAccountDto userAccountDto = userAccountService.readAccountByName(name);
 
-        if (userAccountDto == null) {
-            return ResponseEntity.badRequest().body("Invalid token or Not exist User");
-        }
         List<CardDto> cardDtoList = cardService.readCardAllByUserId(userAccountDto.getId());
 
-        return ResponseEntity.ok(cardDtoList);
+        List<CardDto> cardDtos = new ArrayList<>();
+        for (CardDto cardDto : cardDtoList) {
+            cardDtos.add(CardDto.toBase64(cardDto));
+        }
+
+        return ResponseEntity.ok(cardDtos);
     }
 
     // create
     @PostMapping("/card")
     @Operation(summary = "카드 생성", description = "카드를 생성합니다. /dai/auth/card?token=토큰")
-    public ResponseEntity<?> createCard(
+    public ResponseEntity<Map<String, Long>> createCard(
             @RequestParam(required = true) String token,
             @RequestBody CardDto cardDto
     ) {
@@ -56,11 +60,7 @@ public class AuthController {
         String name = userData.get("name");
         UserAccountDto userAccountDto = userAccountService.readAccountByName(name);
 
-        if (userAccountDto == null) {
-            return ResponseEntity.badRequest().body("Invalid token or Not exist User");
-        }
-
-        cardDto.setId(userAccountDto.getId()); // userId 추가
+        cardDto.setUserId(userAccountDto.getId()); // userId 추가
 
         CardDto cardDto1 = CardDto.toPath(cardDto, cardService.generateUniqueImagePath()); // base64 -> path
 

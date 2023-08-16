@@ -13,7 +13,8 @@ import java.net.URL;
 
 @Component
 @RequiredArgsConstructor
-public class PapagoApiRequester implements ApiRequesterInterface {
+public class
+PapagoApiRequester implements ApiRequesterInterface {
 
     private final TokenManager tokenManager;
     private final HttpUtils httpUtils;

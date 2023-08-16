@@ -63,8 +63,8 @@ public class KakaoService {
         if (response.getStatusCode() == HttpStatus.OK) {
             Map<String, String> userData = new HashMap<>();
             Map<String, Object> responseBody = response.getBody();
-            String name = "";
-            String email = "";
+            String name;
+            String email;
 
             // Preprocessing Data
             System.out.println(response.getBody().toString());

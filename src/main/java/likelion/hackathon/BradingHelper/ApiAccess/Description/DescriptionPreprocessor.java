@@ -10,24 +10,29 @@ import org.springframework.stereotype.Component;
 public class DescriptionPreprocessor {
     private final DescriptionResponse descriptionResponse;
 
-    public String descriptionPreprocessor(Prompt prompt) {
+    public DescriptionApi descriptionPreprocessor(Prompt prompt) {
         String content = descriptionResponse.descriptionResponse(prompt);
+        DescriptionApi description = new DescriptionApi();
 
         JSONObject object = new JSONObject(content);
 
-        String descriptions = "제품명|" + object.getString("제품명") + "|간단한 소개|" + object.getString("간단한 소개") + "|";
+        description.setProductName(object.getString("제품명"));
+        description.setIntroduction(object.getString("간단한 소개"));
 
         JSONObject feature_1 = object.getJSONObject("제품 특징1");
-        descriptions += "특징1|" + feature_1.getString("특징") + "|설명1|" + feature_1.getString("설명") + "|";
+        description.setFeatureFirst(feature_1.getString("특징"));
+        description.setFeatureDescription1(feature_1.getString("설명"));
 
         JSONObject feature_2 = object.getJSONObject("제품 특징2");
-        descriptions += "특징2|" + feature_2.getString("특징") + "|설명2|" + feature_2.getString("설명") + "|";
+        description.setFeatureSecond(feature_2.getString("특징"));
+        description.setFeatureDescription2(feature_2.getString("설명"));
 
         JSONObject feature_3 = object.getJSONObject("제품 특징3");
-        descriptions += "특징3|" + feature_3.getString("특징") + "|설명3|" + feature_3.getString("설명") + "|";
+        description.setFeatureThird(feature_3.getString("특징"));
+        description.setFeatureDescription3(feature_3.getString("설명"));
 
-        descriptions += "제품 홍보 글|" + object.getString("제품 홍보 글");
+        description.setPromotion(object.getString("제품 홍보 글"));
 
-        return descriptions;
+        return description;
     }
 }

@@ -1,6 +1,7 @@
 package likelion.hackathon.BradingHelper.DataCollection.Dto;
 
 import likelion.hackathon.BradingHelper.DataCollection.Entity.Card;
+import likelion.hackathon.BradingHelper.DataCollection.Entity.Description;
 import lombok.*;
 
 import java.io.IOException;
@@ -14,13 +15,13 @@ import java.util.Base64;
 public class CardDto {
     private Long id;
     private Long userId;
-    private String description;
+    private DescriptionDto description;
     private String logoUrl1;
     private String logoUrl2;
     private String imagePath;
 
     @Builder
-    public CardDto(Long id, Long userId, String description, String logoUrl1, String logoUrl2, String imagePath) {
+    public CardDto(Long id, Long userId, DescriptionDto description, String logoUrl1, String logoUrl2, String imagePath) {
         this.id = id;
         this.userId = userId;
         this.description = description;
@@ -33,7 +34,7 @@ public class CardDto {
         return CardDto.builder()
                 .id(card.getId())
                 .userId(card.getUserAccount().getId())
-                .description(card.getDescription())
+                .description(DescriptionDto.of(card.getDescription()))
                 .logoUrl1(card.getLogoUrl1())
                 .logoUrl2(card.getLogoUrl2())
                 .imagePath(card.getImagePath())
@@ -45,8 +46,8 @@ public class CardDto {
             Path imagePathObject = Paths.get(cardDto.getImagePath());
             byte[] imageBytes = Files.readAllBytes(imagePathObject);
             cardDto.setImagePath(Base64.getEncoder().encodeToString(imageBytes));
-        } catch (IOException e) {
-            throw new RuntimeException("이미지 검색 실패.", e);
+        } catch (Exception e) {
+            cardDto.setImagePath(null);
         }
 
         return cardDto;
@@ -63,8 +64,8 @@ public class CardDto {
 
             Files.write(imagePathObject, imageBytes);
             cardDto.setImagePath(imagePath);
-        } catch (IOException e) {
-            throw new RuntimeException("이미지 저장 실패.", e);
+        } catch (Exception e) {
+            cardDto.setImagePath(null);
         }
 
         return cardDto;

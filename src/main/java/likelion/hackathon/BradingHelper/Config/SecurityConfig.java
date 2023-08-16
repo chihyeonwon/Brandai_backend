@@ -1,4 +1,4 @@
-package likelion.hackathon.BradingHelper.Auth;
+package likelion.hackathon.BradingHelper.Config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
