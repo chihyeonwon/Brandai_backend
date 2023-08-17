@@ -6,6 +6,8 @@ import likelion.hackathon.BradingHelper.ApiAccess.Description.DescriptionTemplat
 import likelion.hackathon.BradingHelper.ApiAccess.Description.DescriptionPreprocessor;
 import likelion.hackathon.BradingHelper.ApiAccess.Prompt.Prompt;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,9 +20,20 @@ import org.springframework.web.bind.annotation.RestController;
 public class DescriptionController {
     private final DescriptionPreprocessor descriptionPreprocessor;
 
+    private static final Logger logger = LoggerFactory.getLogger(DescriptionController.class);
+
     @Operation(summary = "설명 생성하기", description = "프롬프트에서 키워드를 추출해 적절한 설명을 가져옵니다.")
     @PostMapping("/description")
     public DescriptionTemplate DescriptionApi(@RequestBody Prompt prompt){
-        return descriptionPreprocessor.descriptionPreprocessor(prompt);
+
+        logger.info("<DESCRIPTION GENERATING..>");
+        DescriptionTemplate descriptionTemplate = descriptionPreprocessor.descriptionPreprocessor(prompt);
+
+        while (descriptionTemplate == null) {
+            descriptionTemplate = descriptionPreprocessor.descriptionPreprocessor(prompt);
+        }
+
+        logger.info("<DESCRIPTION GENERATED !!>");
+        return descriptionTemplate;
     }
 }

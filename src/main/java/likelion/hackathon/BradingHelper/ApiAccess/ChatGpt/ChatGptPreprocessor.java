@@ -17,9 +17,6 @@ public class ChatGptPreprocessor implements DataPreprocessorInterface {
     @Override
     public Map<String, Object> fetchData(String prompt) {
         String data = chatGptApiRequester.ApiRequest(prompt);
-        System.out.println(111111);
-        System.out.println(data);
-        System.out.println(111111);
         JSONObject jsonObject = new JSONObject(data);
 
         String content = jsonObject.getJSONArray("choices")

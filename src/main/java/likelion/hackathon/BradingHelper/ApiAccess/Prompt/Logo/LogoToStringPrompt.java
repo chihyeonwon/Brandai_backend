@@ -17,15 +17,6 @@ public class LogoToStringPrompt implements ToStringPrompt {
         Map<String, String> classifyPrompt
                 = logoPromptPreprocessor.promptPreprocessor(prompt);
 
-
-        System.out.println("Prompt for Generating Brand Logo Image\n"
-                + "Mood: " + classifyPrompt.get("mood") + "\n"
-                + "Base Color: " + classifyPrompt.get("baseColor") + "\n"
-                + "Keywords: " + classifyPrompt.get("keyword") + "\n\n"
-                + "The brand is focused on " + classifyPrompt.get("parentCategory") + " within an e-commerce platform run by small businesses. \n" +
-                "It specializes in " + classifyPrompt.get("childCategory") + ".\n" +
-                "Please create a brand logo image.");
-
         return "Prompt for Generating Brand Logo Image\n"
                 + "Mood: " + classifyPrompt.get("mood") + "\n"
                 + "Base Color: " + classifyPrompt.get("baseColor") + "\n"
@@ -33,6 +24,6 @@ public class LogoToStringPrompt implements ToStringPrompt {
                 + "Keywords: " + classifyPrompt.get("keyword") + "\n\n"
                 + "The brand is focused on " + classifyPrompt.get("parentCategory") + " within an e-commerce platform run by small businesses. \n" +
                 "It specializes in " + classifyPrompt.get("childCategory") + ".\n" +
-                "Please create a brand logo image.";
+                "Please create a brand logo image. And don't put letters";
     }
 }

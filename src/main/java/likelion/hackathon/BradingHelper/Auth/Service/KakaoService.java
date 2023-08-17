@@ -15,7 +15,7 @@ public class KakaoService {
     public String getKakaoToken(String code) {
         try {
             final String tokenUrl = "https://kauth.kakao.com/oauth/token";
-            final String restApiKey = "296894f08c87dfa1fe0fd92868b82697";
+            final String restApiKey = "bd35d95b8db977e0b07b6fd668527afe";
             final String redirectUri = "http://localhost:3000/get-started/login-redirect";
 
             MultiValueMap<String, String> requestBody = new LinkedMultiValueMap<>();

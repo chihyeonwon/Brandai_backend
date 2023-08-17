@@ -9,8 +9,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,14 +25,12 @@ public class CardController {
     @Operation(summary = "카드 생성", description = "카드를 생성합니다.")
     @PostMapping
     public ResponseEntity<Map<String, Long>> createCard(@RequestBody CardDto cardDto) {
-        CardDto cardDto1 = CardDto.toPath(cardDto, cardService.generateUniqueImagePath());
-        Long row = cardService.createCard(cardDto1);
+        Long row = cardService.createCard(cardDto);
 
         Map<String, Long> response = Collections.singletonMap("cardId", row);
 
         return ResponseEntity.ok().body(response);
     }
-
 
     // Read
     @Operation(summary = "카드 정보 가져오기", description = "카드 id를 이용해 카드를 가져옵니다.")
@@ -42,20 +42,16 @@ public class CardController {
             return ResponseEntity.unprocessableEntity().body(null);
         }
 
-        return ResponseEntity.ok(CardDto.toBase64(cardDto));
+        return ResponseEntity.ok(cardDto);
     }
-
 
     // Read All Card By UserId
     @Operation(summary = "특정 유저의 카드 목록 가져오기", description = "해당 유저의 카드 목록을 가져옵니다.")
     @GetMapping("/account/{userId}")
     public ResponseEntity<List<CardDto>> readCardAllByUserId(@PathVariable("userId") Long userId) {
         List<CardDto> cardDtoList = cardService.readCardAllByUserId(userId);
-        List<CardDto> cardDtos = cardDtoList.stream()
-                .map(CardDto::toBase64)
-                .collect(Collectors.toList());
 
-        return ResponseEntity.ok(cardDtos);
+        return ResponseEntity.ok(cardDtoList);
 
     }
 

@@ -55,7 +55,6 @@ PapagoApiRequester implements ApiRequesterInterface {
                 dataOutputStream.flush();
 
                 result = httpUtils.getHttpResponse(conn);
-                System.out.println(result);
             } catch (IOException e) {
                 e.printStackTrace();
             }

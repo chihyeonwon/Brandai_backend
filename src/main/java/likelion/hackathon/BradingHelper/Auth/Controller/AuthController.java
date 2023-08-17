@@ -5,17 +5,21 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import likelion.hackathon.BradingHelper.Auth.Service.KakaoService;
 import likelion.hackathon.BradingHelper.DataCollection.Dto.CardDto;
 import likelion.hackathon.BradingHelper.DataCollection.Dto.UserAccountDto;
-import likelion.hackathon.BradingHelper.DataCollection.Entity.Card;
-import likelion.hackathon.BradingHelper.DataCollection.Entity.UserAccount;
 import likelion.hackathon.BradingHelper.DataCollection.Service.CardService;
 import likelion.hackathon.BradingHelper.DataCollection.Service.UserAccountService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/dai/auth")
@@ -37,29 +41,45 @@ public class AuthController {
 
         List<CardDto> cardDtoList = cardService.readCardAllByUserId(userAccountDto.getId());
 
-        List<CardDto> cardDtos = cardDtoList.stream()
-                .map(CardDto::toBase64)
-                .collect(Collectors.toList());
-
-        return ResponseEntity.ok(cardDtos);
+        return ResponseEntity.ok(cardDtoList);
     }
 
+//    // create
+//    @PostMapping("/card")
+//    @Operation(summary = "카드 생성", description = "카드를 생성합니다. /dai/auth/card?token=토큰")
+//    public ResponseEntity<Map<String, Long>> createCard(
+//            @RequestParam(required = true) String token,
+//            @RequestBody CardDto cardDto
+//    ) {
+//        Map<String, String> userData = kakaoService.getKakaoUserData(token);
+//        String name = userData.get("name");
+//        UserAccountDto userAccountDto = userAccountService.readAccountByName(name);
+//
+//        cardDto.setUserId(userAccountDto.getId()); // userId 추가
+//
+//        Long row = cardService.createCard(cardDto);
+//
+//        Map<String, Long> response = Collections.singletonMap("Id", row);
+//
+//        return ResponseEntity.ok().body(response);
+//    }
     // create
     @PostMapping("/card")
     @Operation(summary = "카드 생성", description = "카드를 생성합니다. /dai/auth/card?token=토큰")
     public ResponseEntity<Map<String, Long>> createCard(
-            @RequestParam(required = true) String token,
+            @RequestParam String token,
             @RequestBody CardDto cardDto
     ) {
+        // Check Authentication
         Map<String, String> userData = kakaoService.getKakaoUserData(token);
         String name = userData.get("name");
         UserAccountDto userAccountDto = userAccountService.readAccountByName(name);
 
+        // Successes Authentication
         cardDto.setUserId(userAccountDto.getId()); // userId 추가
-        CardDto cardDto1 = CardDto.toPath(cardDto, cardService.generateUniqueImagePath()); // base64 -> path
 
-        Long row = cardService.createCard(cardDto1);
-
+        // Create Card
+        Long row = cardService.createCard(cardDto);
         Map<String, Long> response = Collections.singletonMap("Id", row);
 
         return ResponseEntity.ok().body(response);
@@ -72,8 +92,7 @@ public class AuthController {
         CardDto cardDto = cardService.readCard(id);
 
         return cardDto != null
-                ? ResponseEntity.ok(CardDto.toBase64(cardDto))
+                ? ResponseEntity.ok(cardDto)
                 : ResponseEntity.unprocessableEntity().build();
     }
-
 }

@@ -1,14 +1,7 @@
 package likelion.hackathon.BradingHelper.DataCollection.Dto;
 
 import likelion.hackathon.BradingHelper.DataCollection.Entity.Card;
-import likelion.hackathon.BradingHelper.DataCollection.Entity.Description;
 import lombok.*;
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Base64;
 
 @Getter @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -39,36 +32,6 @@ public class CardDto {
                 .logoUrl2(card.getLogoUrl2())
                 .imagePath(card.getImagePath())
                 .build();
-    }
-
-    public static CardDto toBase64(CardDto cardDto) { // Path -> base64
-        try {
-            Path imagePathObject = Paths.get(cardDto.getImagePath());
-            byte[] imageBytes = Files.readAllBytes(imagePathObject);
-            cardDto.setImagePath(Base64.getEncoder().encodeToString(imageBytes));
-        } catch (Exception e) {
-            cardDto.setImagePath(null);
-        }
-
-        return cardDto;
-    }
-
-    public static CardDto toPath(CardDto cardDto, String imagePath) { // base64 -> pasth
-        try {
-            byte[] imageBytes = Base64.getDecoder().decode(cardDto.getImagePath());
-            Path imagePathObject = Paths.get(imagePath);
-
-            if (!Files.exists(imagePathObject)) {
-                Files.createFile(imagePathObject);
-            }
-
-            Files.write(imagePathObject, imageBytes);
-            cardDto.setImagePath(imagePath);
-        } catch (Exception e) {
-            cardDto.setImagePath(null);
-        }
-
-        return cardDto;
     }
 
 }
