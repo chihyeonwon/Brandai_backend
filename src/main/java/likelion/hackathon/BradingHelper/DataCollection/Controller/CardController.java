@@ -3,17 +3,14 @@ package likelion.hackathon.BradingHelper.DataCollection.Controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import likelion.hackathon.BradingHelper.DataCollection.Dto.CardDto;
-import likelion.hackathon.BradingHelper.DataCollection.Entity.Card;
 import likelion.hackathon.BradingHelper.DataCollection.Service.CardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,11 +24,9 @@ public class CardController {
     @PostMapping
     public ResponseEntity<Map<String, Long>> createCard(@RequestBody CardDto cardDto) {
         CardDto cardDto1 = CardDto.toPath(cardDto, cardService.generateUniqueImagePath());
-
         Long row = cardService.createCard(cardDto1);
 
-        Map<String, Long> response = new HashMap<>();
-        response.put("Id", row);
+        Map<String, Long> response = Collections.singletonMap("cardId", row);
 
         return ResponseEntity.ok().body(response);
     }
@@ -47,9 +42,7 @@ public class CardController {
             return ResponseEntity.unprocessableEntity().body(null);
         }
 
-        CardDto cardDto1 = CardDto.toBase64(cardDto);
-
-        return ResponseEntity.ok(cardDto1);
+        return ResponseEntity.ok(CardDto.toBase64(cardDto));
     }
 
 
@@ -58,14 +51,12 @@ public class CardController {
     @GetMapping("/account/{userId}")
     public ResponseEntity<List<CardDto>> readCardAllByUserId(@PathVariable("userId") Long userId) {
         List<CardDto> cardDtoList = cardService.readCardAllByUserId(userId);
-        List<CardDto> cardDtos = new ArrayList<>();
-
-        for (CardDto cardDto : cardDtoList) {
-            CardDto cardDto1 = CardDto.toBase64(cardDto);
-            cardDtos.add(cardDto1);
-        }
+        List<CardDto> cardDtos = cardDtoList.stream()
+                .map(CardDto::toBase64)
+                .collect(Collectors.toList());
 
         return ResponseEntity.ok(cardDtos);
+
     }
 
 
@@ -77,8 +68,10 @@ public class CardController {
             @PathVariable("cardId") Long cardId,
             @RequestBody CardDto cardDto
     ){
+        Long updatedCardId = cardService.updateCard(userId, cardId, cardDto);
+
         Map<String, Long> response = new HashMap<>();
-        response.put("cardId", cardService.updateCard(userId, cardId, cardDto));
+        response.put("cardId", updatedCardId);
 
         return ResponseEntity.ok().body(response);
     }

@@ -43,7 +43,7 @@ public class HttpUtils {
 
         StringBuilder sb = new StringBuilder();
 
-        String line = "";
+        String line;
 
         try (InputStreamReader ir = new InputStreamReader(in);
              BufferedReader br = new BufferedReader(ir)) {

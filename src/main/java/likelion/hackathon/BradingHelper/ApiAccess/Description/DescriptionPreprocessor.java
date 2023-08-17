@@ -10,29 +10,20 @@ import org.springframework.stereotype.Component;
 public class DescriptionPreprocessor {
     private final DescriptionResponse descriptionResponse;
 
-    public DescriptionApi descriptionPreprocessor(Prompt prompt) {
+    public DescriptionTemplate descriptionPreprocessor(Prompt prompt) {
         String content = descriptionResponse.descriptionResponse(prompt);
-        DescriptionApi description = new DescriptionApi();
-
         JSONObject object = new JSONObject(content);
 
-        description.setProductName(object.getString("제품명"));
-        description.setIntroduction(object.getString("간단한 소개"));
-
-        JSONObject feature_1 = object.getJSONObject("제품 특징1");
-        description.setFeatureFirst(feature_1.getString("특징"));
-        description.setFeatureDescription1(feature_1.getString("설명"));
-
-        JSONObject feature_2 = object.getJSONObject("제품 특징2");
-        description.setFeatureSecond(feature_2.getString("특징"));
-        description.setFeatureDescription2(feature_2.getString("설명"));
-
-        JSONObject feature_3 = object.getJSONObject("제품 특징3");
-        description.setFeatureThird(feature_3.getString("특징"));
-        description.setFeatureDescription3(feature_3.getString("설명"));
-
-        description.setPromotion(object.getString("제품 홍보 글"));
-
-        return description;
+        return DescriptionTemplate.builder()
+                .productName(object.getString("제품명"))
+                .introduction(object.getString("간단한 소개"))
+                .featureFirst(object.getJSONObject("제품 특징1").getString("특징"))
+                .featureDescription1(object.getJSONObject("제품 특징1").getString("설명"))
+                .featureSecond(object.getJSONObject("제품 특징2").getString("특징"))
+                .featureDescription2(object.getJSONObject("제품 특징2").getString("설명"))
+                .featureThird(object.getJSONObject("제품 특징3").getString("특징"))
+                .featureDescription3(object.getJSONObject("제품 특징3").getString("설명"))
+                .promotion(object.getString("제품 홍보 글"))
+                .build();
     }
 }

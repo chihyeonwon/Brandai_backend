@@ -14,10 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/dai/auth")
@@ -34,16 +32,14 @@ public class AuthController {
             @RequestParam(required = true) String token
     ) {
         Map<String, String> userData = kakaoService.getKakaoUserData(token);
-
         String name = userData.get("name");
         UserAccountDto userAccountDto = userAccountService.readAccountByName(name);
 
         List<CardDto> cardDtoList = cardService.readCardAllByUserId(userAccountDto.getId());
 
-        List<CardDto> cardDtos = new ArrayList<>();
-        for (CardDto cardDto : cardDtoList) {
-            cardDtos.add(CardDto.toBase64(cardDto));
-        }
+        List<CardDto> cardDtos = cardDtoList.stream()
+                .map(CardDto::toBase64)
+                .collect(Collectors.toList());
 
         return ResponseEntity.ok(cardDtos);
     }
@@ -56,21 +52,17 @@ public class AuthController {
             @RequestBody CardDto cardDto
     ) {
         Map<String, String> userData = kakaoService.getKakaoUserData(token);
-
         String name = userData.get("name");
         UserAccountDto userAccountDto = userAccountService.readAccountByName(name);
 
         cardDto.setUserId(userAccountDto.getId()); // userId 추가
-
         CardDto cardDto1 = CardDto.toPath(cardDto, cardService.generateUniqueImagePath()); // base64 -> path
 
         Long row = cardService.createCard(cardDto1);
 
-        Map<String, Long> response = new HashMap<>();
-        response.put("Id", row);
+        Map<String, Long> response = Collections.singletonMap("Id", row);
 
         return ResponseEntity.ok().body(response);
-
     }
 
     // Read
@@ -79,14 +71,9 @@ public class AuthController {
     public ResponseEntity<CardDto> readCard(@PathVariable("cardId") Long id) {
         CardDto cardDto = cardService.readCard(id);
 
-        if (cardDto == null){
-            return ResponseEntity.unprocessableEntity().body(null);
-        }
-
-        // path -> base64
-        CardDto cardDto1 = CardDto.toBase64(cardDto);
-
-        return ResponseEntity.ok(cardDto1);
+        return cardDto != null
+                ? ResponseEntity.ok(CardDto.toBase64(cardDto))
+                : ResponseEntity.unprocessableEntity().build();
     }
 
 }

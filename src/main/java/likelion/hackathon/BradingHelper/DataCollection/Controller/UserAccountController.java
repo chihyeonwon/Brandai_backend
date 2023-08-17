@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,25 +25,19 @@ public class UserAccountController {
     @Operation(summary = "계정 생성", description = "계정을 생성합니다.")
     @PostMapping
     public ResponseEntity<Map<String, Long>> createAccount(@RequestBody UserAccountDto userAccountDto) {
-        Long row = userAccountService.createAccount(userAccountDto);
+        Long userId = userAccountService.createAccount(userAccountDto);
 
-        Map<String, Long> response = new HashMap<>();
-        response.put("userId", row);
-
-        return ResponseEntity.ok().body(response);
+        return ResponseEntity.ok(Collections.singletonMap("userId", userId));
     }
 
     // Read
     @Operation(summary = "계정 정보 가져오기", description = "계정 정보를 가져옵니다.")
     @GetMapping("{userId}")
-    public ResponseEntity<UserAccountDto> readAccount(@PathVariable("userId") Long id) {
-        UserAccountDto userAccountDto = userAccountService.readAccount(id);
+    public ResponseEntity<UserAccountDto> readAccount(@PathVariable("userId") Long userId) {
+        UserAccountDto userAccountDto = userAccountService.readAccount(userId);
 
-        if (userAccountDto == null){
-            return ResponseEntity.unprocessableEntity().body(null);
-        }
-
-        return ResponseEntity.ok(userAccountDto);
+        return ResponseEntity.status(userAccountDto == null ? HttpStatus.UNPROCESSABLE_ENTITY : HttpStatus.OK)
+                .body(userAccountDto);
     }
 
     @Operation(summary = "모든 계정 정보 가져오기", description = "모든 계정의 계정 정보를 가져옵니다.")
@@ -57,19 +52,21 @@ public class UserAccountController {
     @Operation(summary = "계정 업데이트", description = "계정 정보를 업데이트 합니다.")
     @PutMapping("{userId}")
     public ResponseEntity<Map<String, Long>> updateAccount(
-            @PathVariable("userId") Long id,
+            @PathVariable("userId") Long userId,
             @RequestBody UserAccountDto userAccountDto
     ){
-        Map<String, Long> response = new HashMap<>();
-        response.put("userId", userAccountService.updateAccount(id, userAccountDto));
-        return ResponseEntity.ok().body(response);
+        Long updatedUserId = userAccountService.updateAccount(userId, userAccountDto);
+
+        return ResponseEntity.ok(Collections.singletonMap("userId", updatedUserId));
+
     }
 
     // Delete
     @Operation(summary = "계정 삭제", description = "계정을 삭제합니다.")
     @DeleteMapping("{userId}")
-    public ResponseEntity<HttpStatus> deleteAccount(@PathVariable("userId") Long id) {
-        userAccountService.deleteAccount(id);
+    public ResponseEntity<HttpStatus> deleteAccount(@PathVariable("userId") Long userId) {
+        userAccountService.deleteAccount(userId);
+
         return ResponseEntity.ok().body(HttpStatus.OK);
     }
 }

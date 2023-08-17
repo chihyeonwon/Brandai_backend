@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
@@ -24,35 +25,32 @@ public class CardDao {
     public Long create(CardDto cardDto) {
         Optional<UserAccount> userAccount = userAccountRepository.findById(cardDto.getUserId());
 
-        if (userAccount.isEmpty()) { // If you try to create a card for a non-existent user
-            return null;
-        }
+        return userAccount.map(account -> {
+            DescriptionDto descriptionDto = cardDto.getDescription();
+            Description description = Description.builder()
+                    .id(descriptionDto.getId())
+                    .productName(descriptionDto.getProductName())
+                    .introduction(descriptionDto.getIntroduction())
+                    .featureFirst(descriptionDto.getFeatureFirst())
+                    .featureDescription1(descriptionDto.getFeatureDescription1())
+                    .featureSecond(descriptionDto.getFeatureSecond())
+                    .featureDescription2(descriptionDto.getFeatureDescription2())
+                    .featureThird(descriptionDto.getFeatureThird())
+                    .featureDescription3(descriptionDto.getFeatureDescription3())
+                    .promotion(descriptionDto.getPromotion())
+                    .build();
 
-        DescriptionDto descriptionDto = cardDto.getDescription();
-        Description description = Description.builder()
-                .id(descriptionDto.getId())
-                .productName(descriptionDto.getProductName())
-                .introduction(descriptionDto.getIntroduction())
-                .featureFirst(descriptionDto.getFeatureFirst())
-                .featureDescription1(descriptionDto.getFeatureDescription1())
-                .featureSecond(descriptionDto.getFeatureSecond())
-                .featureDescription2(descriptionDto.getFeatureDescription2())
-                .featureThird(descriptionDto.getFeatureThird())
-                .featureDescription3(descriptionDto.getFeatureDescription3())
-                .promotion(descriptionDto.getPromotion())
-                .build();
+            Card card = Card.builder()
+                    .userAccount(account)
+                    .logoUrl1(cardDto.getLogoUrl1())
+                    .logoUrl2(cardDto.getLogoUrl2())
+                    .description(description)
+                    .imagePath(cardDto.getImagePath())
+                    .build();
 
-        Card card = Card.builder()
-                .userAccount(userAccount.get())
-                .logoUrl1(cardDto.getLogoUrl1())
-                .logoUrl2(cardDto.getLogoUrl2())
-                .description(description)
-                .imagePath(cardDto.getImagePath())
-                .userAccount(userAccount.get())
-                .build();
-
-        cardRepository.save(card);
-        return card.getId();
+            cardRepository.save(card);
+            return card.getId();
+        }).orElse(null);
     }
 
     public CardDto read(Long cardId) {
@@ -68,33 +66,19 @@ public class CardDao {
     }
 
     public List<CardDto> readAllByUserId(Long userId) {
-        Optional<UserAccount> userAccountOptional = userAccountRepository.findById(userId); // Find UserAccount by userId
+        Optional<UserAccount> userAccountOptional = userAccountRepository.findById(userId);
 
-        if (userAccountOptional.isEmpty()) {
-            return null;
-        }
-
-        Iterator<Card> cardIterator = userAccountOptional.get().getCardList().iterator(); // Find CardList by UserAccount
-        List<CardDto> cardDtoList = new ArrayList<>();
-
-        while (cardIterator.hasNext()) {
-            Card card = cardIterator.next();
-            cardDtoList.add(CardDto.of(card));
-        }
-
-        return cardDtoList;
+        return userAccountOptional.map(userAccount -> userAccount.getCardList().stream()
+                .map(CardDto::of)
+                .collect(Collectors.toList())
+        ).orElse(null);
     }
 
     public Long update(Long userId, Long cardId, CardDto cardDto) {
         Optional<UserAccount> userAccountOptional = userAccountRepository.findById(userId);
-
-        if (userAccountOptional.isEmpty()) {
-            return null;
-        }
-
         Optional<Card> cardOptional = cardRepository.findById(cardId);
 
-        if (cardOptional.isEmpty()) {
+        if (userAccountOptional.isEmpty() || cardOptional.isEmpty()) {
             return null;
         }
 
@@ -107,16 +91,12 @@ public class CardDao {
         }
 
         cardRepository.save(targetCard);
-
         return targetCard.getId();
     }
 
     public void delete(Long userId, Long cardId) {
-        if (userAccountRepository.findById(userId).isEmpty()) {
-            return;
-        }
-
-        if (cardRepository.findById(cardId).isEmpty()) {
+        if (userAccountRepository.findById(userId).isEmpty()
+                || cardRepository.findById(cardId).isEmpty()) {
             return;
         }
 

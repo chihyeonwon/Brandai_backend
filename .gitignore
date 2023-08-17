@@ -235,3 +235,5 @@ out/
 
 ### VS Code ###
 .vscode/
+
+Dockerfile

@@ -21,10 +21,7 @@ public class SecurityConfig  {
                 .formLogin().disable()
                 .httpBasic().disable()
                 .authorizeHttpRequests()
-                .antMatchers("/dai/login").permitAll()
-                .antMatchers("/dai/api/**").permitAll()
                 .antMatchers("/dai/**").permitAll();
-
         return http.build();
 
     }
